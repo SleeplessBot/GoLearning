@@ -5,11 +5,18 @@ import (
 	"golearning/experiments"
 )
 
+// go run main.go
 func main() {
 	if false {
 		examples.ExampleBase62UUID()
 	}
-	if true {
+	if false {
 		experiments.ExperimentStringElementType()
+	}
+	if false {
+		examples.ExampleCas()
+	}
+	if true {
+		examples.ExampleKvs()
 	}
 }

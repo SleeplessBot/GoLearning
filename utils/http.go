@@ -181,7 +181,8 @@ func HttpDownloadFile(reqUrl string, filePath string) error {
 	return err
 }
 
-func HttpDownloadFileM(reqUrl string, fileDir string) (string, error) {
+// download file to cas
+func HttpDownloadFileC(reqUrl string) (string, error) {
 	httpReq, err := http.NewRequest("GET", reqUrl, nil)
 	if err != nil {
 		return "", err
@@ -199,5 +200,5 @@ func HttpDownloadFileM(reqUrl string, fileDir string) (string, error) {
 		return "", fmt.Errorf("http status code %d", httpResp.StatusCode)
 	}
 
-	return SaveFileWithMd5Name(httpResp.Body, fileDir)
+	return DefaultCas.Create(httpResp.Body)
 }
