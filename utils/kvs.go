@@ -6,8 +6,6 @@ import (
 	badger "github.com/dgraph-io/badger/v3"
 )
 
-var DefaultKvs Kvs
-
 type Kvs interface {
 	Get(key string) (string, error)
 	Set(key, value string) error
@@ -59,8 +57,4 @@ func (s *SimpleKvs) Del(key string) error {
 		return nil
 	})
 	return err
-}
-
-func init() {
-	DefaultKvs, _ = NewKVS()
 }

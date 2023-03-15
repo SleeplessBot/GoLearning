@@ -229,3 +229,17 @@ func IsSha1LikeHashString(s string) bool {
 
 	return true
 }
+
+func SaveStrToFile(fileName string, content string) error {
+	os.MkdirAll(filepath.Dir(fileName), os.ModePerm)
+	file, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	_, err = file.Write([]byte(content))
+	if err != nil {
+		return err
+	}
+	return nil
+}

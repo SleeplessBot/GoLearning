@@ -16,7 +16,16 @@ func main() {
 	if false {
 		examples.ExampleCas()
 	}
-	if true {
+	if false {
 		examples.ExampleKvs()
+	}
+	if false {
+		examples.ExampleZipAndUnzip()
+	}
+	if false {
+		experiments.ExperimentFilePath()
+	}
+	if false {
+		experiments.ExperimentStringsBuilder()
 	}
 }

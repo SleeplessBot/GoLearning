@@ -51,7 +51,7 @@ func Unzip(srcZipFilePath, dstDirPath string) error {
 }
 
 // compress a directory into a zip file
-func CreateZip(srcDirPath, dstZipFilePath string) error {
+func CreateZipFromDir(srcDirPath, dstZipFilePath string) error {
 	// Create a new zip file
 	zipFile, err := os.Create(dstZipFilePath)
 	if err != nil {
@@ -81,7 +81,11 @@ func CreateZip(srcDirPath, dstZipFilePath string) error {
 		}
 
 		// Set the name of the file header to the relative path of the file
-		fileHeader.Name, err = filepath.Rel(srcDirPath, filePath)
+		relPath, err := filepath.Rel(srcDirPath, filePath)
+		if err != nil {
+			return err
+		}
+		fileHeader.Name = filepath.Join(filepath.Base(srcDirPath), relPath)
 		if err != nil {
 			return err
 		}
@@ -106,5 +110,71 @@ func CreateZip(srcDirPath, dstZipFilePath string) error {
 
 		return nil
 	})
+	return nil
+}
+
+// compress file list into a zip file
+func CreateZipFromFiles(srcFiles []string, dstZipFilePath string, innerZipDirName string) error {
+	// Create a new zip file
+	zipFile, err := os.Create(dstZipFilePath)
+	if err != nil {
+		return err
+	}
+	defer zipFile.Close()
+
+	// Create a new zip archive
+	zipWriter := zip.NewWriter(zipFile)
+	defer zipWriter.Close()
+
+	// Add files into the zip file
+	for _, srcFile := range srcFiles {
+		err := addFileToZip(innerZipDirName, srcFile, zipWriter)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func addFileToZip(innerZipDirName string, filename string, zipWriter *zip.Writer) error {
+	// Open the file that needs to be added to the zip archive
+	fileToZip, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	defer fileToZip.Close()
+
+	// Get the file information
+	fileInfo, err := fileToZip.Stat()
+	if err != nil {
+		return err
+	}
+
+	// Create a new zip file header
+	header, err := zip.FileInfoHeader(fileInfo)
+	if err != nil {
+		return err
+	}
+
+	// Set the name of the file within the zip archive
+	if innerZipDirName != "" {
+		header.Name = filepath.Join(innerZipDirName, filepath.Base(filename))
+	} else {
+		header.Name = filepath.Base(filename)
+	}
+
+	// Add the file header to the zip writer
+	writer, err := zipWriter.CreateHeader(header)
+	if err != nil {
+		return err
+	}
+
+	// Write the file to the zip archive
+	_, err = io.Copy(writer, fileToZip)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
