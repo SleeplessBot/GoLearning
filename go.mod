@@ -6,6 +6,7 @@ require (
 	github.com/dgraph-io/badger/v3 v3.2103.5
 	github.com/google/uuid v1.3.0
 	github.com/mojocn/base64Captcha v1.3.5
+	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/zeromicro/go-zero v1.5.0
 	go.opentelemetry.io/otel/trace v1.14.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
