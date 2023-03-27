@@ -51,3 +51,32 @@ func ExampleEntityOption() {
 	e := NewMyEntity("foo", WithCustomOpt("hi"))
 	e.Show()
 }
+
+// use optional option list param
+func NewMyEntity2(name string, options ...Option2) *Entity {
+	e := &Entity{ // default entity if no options provided
+		name: name,
+		opt:  "default opt",
+	}
+
+	// apply option list
+	for _, option := range options {
+		option(e)
+	}
+
+	return e
+}
+
+// not using interface implements
+type Option2 func(*Entity)
+
+func WithCustomOpt2(opt string) Option2 {
+	return func(e *Entity) {
+		e.opt = opt
+	}
+}
+
+func ExampleEntityOption2() {
+	e := NewMyEntity2("foo", WithCustomOpt2("hi"))
+	e.Show()
+}
